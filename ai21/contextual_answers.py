@@ -78,12 +78,13 @@ class AI21ContextualAnswers(AI21):
                 raise ValueError("Can ONLY USE 'answer' model")
         params = {**self._default_params, **kwargs}
         self.ai21_api_key = SecretStr(os.environ["AI21_API_KEY"])
+        context = kwargs["context"] if "context" in kwargs else "No context"
         response = requests.post(
             url=answer_api_url,
             headers={"Authorization": f"Bearer {self.ai21_api_key.get_secret_value()}"},
             json={
                 "question": prompt,
-                "context": kwargs["context"],
+                "context": context,
                 "stopSequences": stop,
                 **params,
             },

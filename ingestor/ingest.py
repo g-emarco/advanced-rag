@@ -1,13 +1,16 @@
+import os
 from dotenv import load_dotenv
+
+load_dotenv()
 from langchain.embeddings import VertexAIEmbeddings
 from langchain.document_loaders import UnstructuredHTMLLoader
 from langchain.vectorstores.faiss import FAISS
+from langchain.vectorstores.pgvector import PGVector
 
-load_dotenv()
 
 if __name__ == "__main__":
     print("Going to ingest pinecone documentation...")
-    loader = UnstructuredHTMLLoader("../lemonade/faq.html")
+    loader = UnstructuredHTMLLoader("lemonade/faq.html")
     raw_documents = loader.load()
     print(f"loaded {len(raw_documents)} documents")
 
@@ -21,7 +24,13 @@ if __name__ == "__main__":
     )
     embeddings = VertexAIEmbeddings()
     splits = splitter.split_documents(documents=raw_documents)
+    print(f"splitted for {len(splits)} splits")
 
-    db = FAISS.from_documents(splits, embeddings)
-    db.save_local("faiss_index")
+    db = PGVector.from_documents(
+        documents=splits,
+        embedding=embeddings,
+        connection_string=os.environ["CONNECTION_STRING"],
+    )
+    # db = FAISS.from_documents(splits, embeddings)
+    # db.save_local("faiss_index")
     print("finished ingesting...")

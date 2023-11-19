@@ -14,6 +14,9 @@ llama-index = "*"
 beautifulsoup4 = "*"
 unstructured = "*"
 faiss-cpu = "*"
+langchainhub = "*"
+psycopg2-binary = "*"
+pgvector = "*"
 
 [dev-packages]
 
