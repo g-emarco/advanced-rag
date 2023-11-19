@@ -17,6 +17,7 @@ faiss-cpu = "*"
 langchainhub = "*"
 psycopg2-binary = "*"
 pgvector = "*"
+streamlit = "*"
 
 [dev-packages]
 
