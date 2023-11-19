@@ -1,7 +1,11 @@
 from dotenv import load_dotenv
 
-from main import ask_bot2_ai21
-from rag.rag import ask_bot_vertex, ask_bot_vertex_guardrailed, ask_bot_vertex_guardrailed2
+from rag.rag import (
+    ask_bot_vertex,
+    ask_bot_vertex_guardrailed,
+    ask_bot_vertex_guardrailed2,
+    ask_bot_ai21, ask_bot2_ai21
+)
 
 load_dotenv()
 import os
@@ -36,7 +40,7 @@ if "messages" not in st.session_state.keys():
         }
     ]
 
-model = st.radio("model", [PALM2,PALM2_GUARDRAILED, PALM2_GUARDRAILED2, AI21], index=0)
+model = st.radio("model", [PALM2, PALM2_GUARDRAILED, PALM2_GUARDRAILED2, AI21], index=0)
 
 if prompt := st.chat_input("Your question"):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -49,7 +53,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             if model == AI21:
-                response = ask_bot2_ai21(question_query=prompt)
+                response = ask_bot_ai21(question_query=prompt)
             if model == PALM2:
                 response = ask_bot_vertex(question_query=prompt)
             if model == PALM2_GUARDRAILED:
