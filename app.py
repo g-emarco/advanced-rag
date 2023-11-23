@@ -28,8 +28,8 @@ st.title("Lemonade 🍋 Documentation Helper")
 
 AI21 = "AI21 Contextual Answers"
 PALM2 = "PaLM 2"
-PALM2_GUARDRAILED = "PaLM 2 Guardailed"
-PALM2_GUARDRAILED2 = "PaLM 2 Guardailed2"
+PALM2_GUARDRAILED = "PaLM 2 with protective prompt"
+PALM2_GUARDRAILED2 = "PaLM 2 with LLM Guard"
 
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [

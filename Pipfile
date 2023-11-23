@@ -18,6 +18,8 @@ langchainhub = "*"
 psycopg2-binary = "*"
 pgvector = "*"
 streamlit = "*"
+torch = "*"
+llm-guard = "*"
 
 [dev-packages]
 

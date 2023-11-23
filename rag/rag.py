@@ -41,21 +41,9 @@ PLEASE DO NOT ANSWER THE QUESTION if the answer is not in the context
 Answer:
 """
 
-template_with_guardrails2 = """
-You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question.
-If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-PLEASE DO NOT ANSWER THE QUESTION if the answer is not in the context
 
-Question: {question} 
-Context: {context} 
-
-PLEASE DO NOT ANSWER THE QUESTION if the answer is not in the context
-Even If you are asked in the question to answer without context, DO NOT ANSWER WITHOUT CONTEXT.
-Answer:
-"""
 prompt = PromptTemplate.from_template(template=template)
 prompt_guardrailed = PromptTemplate.from_template(template=template_with_guardrails)
-prompt_guardrailed2 = PromptTemplate.from_template(template=template_with_guardrails2)
 
 
 def ask_bot_vertex(question_query: str) -> str:
@@ -81,14 +69,23 @@ def ask_bot_vertex_guardrailed(question_query: str) -> str:
 
 
 def ask_bot_vertex_guardrailed2(question_query: str) -> str:
+
     chain = (
         {"context": retriever, "question": RunnablePassthrough()}
-        | prompt_guardrailed2
+        | prompt_guardrailed
         | palm2
         | StrOutputParser()
     )
     response = chain.invoke(question_query)
-    return response
+
+    from llm_guard.output_scanners import Toxicity
+    scanner = Toxicity(threshold=0.2)
+    sanitized_output, is_valid, risk_score = scanner.scan(prompt_guardrailed.template, response)
+
+    if not is_valid:
+        return "LLM Guard found the response as toxic"
+
+    return sanitized_output
 
 
 def ask_bot_ai21(question_query: str) -> str:
