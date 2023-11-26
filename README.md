@@ -28,7 +28,7 @@ To run this project, you will need to add the following environment variables to
 
 
 
-`AI21_API_KEY`
+`AI21_API_KEY`, `CONNECTION_STRING`
 
 
 ## Run Locally
@@ -80,29 +80,29 @@ gcloud services enable vertexai.googleapis.com
 
 ```
 
-2. Create a service account `vertex-ai-consumer` with the following roles:
+2. Create a service account `rag-app-sa` with the following roles:
 
 
 
 
 ```bash
-gcloud iam service-accounts create vertex-ai-consumer \
-    --display-name="Vertex AI Consumer"
+gcloud iam service-accounts create rag-app-sa \
+    --display-name="SA For Application"
 
 gcloud projects add-iam-policy-binding PROJECT_ID \
-    --member="serviceAccount:vertex-ai-consumer@PROJECT_ID.iam.gserviceaccount.com" \
+    --member="serviceAccount:rag-app-sa@PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/run.invoker"
 
 gcloud projects add-iam-policy-binding PROJECT_ID \
-    --member="serviceAccount:vertex-ai-consumer@PROJECT_ID.iam.gserviceaccount.com" \
+    --member="serviceAccount:rag-app-sa@PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/serviceusage.serviceUsageConsumer"
 
 gcloud projects add-iam-policy-binding PROJECT_ID \
-    --member="serviceAccount:vertex-ai-consumer@PROJECT_ID.iam.gserviceaccount.com" \
+    --member="serviceAccount:rag-app-sa@PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/ml.admin"
 
 gcloud projects add-iam-policy-binding PROJECT_ID \
-    --member="serviceAccount:vertex-ai-consumer@PROJECT_ID.iam.gserviceaccount.com" \
+    --member="serviceAccount:rag-app-sa@PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/vertexai.admin"
 
 ```
@@ -111,24 +111,24 @@ gcloud projects add-iam-policy-binding PROJECT_ID \
 
 `AI21_API_KEY`
 
-and for each secret grant the SA `vertex-ai-consumer@$PROJECT_ID.iam.gserviceaccount.com` Secret Manager Secret Accessor
+and for each secret grant the SA `rag-app-sa@$PROJECT_ID.iam.gserviceaccount.com` Secret Manager Secret Accessor
 role to th secrets
 
 4. Build Image
 ```bash
-docker build . -t us-east1-docker.pkg.dev/$PROJECT_ID/app/github-assitant:latest
+docker build . -t us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest
 ```
 
 5. Push to Artifact Registry
 ```bash
-docker push us-east1-docker.pkg.dev/$PROJECT_ID/app/github-assitant:latest
+docker push us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest
 ```
 
 6. Deploy to cloud run
 ```gcloud run deploy $PROJECT_ID \
-    --image=us-east1-docker.pkg.dev/PROJECT_ID/app/github-assitant:latest \
+    --image=us-east1-docker.pkg.dev/PROJECT_ID/app/documentation-assistant:latest \
     --region=us-east1 \
-    --service-account=vertex-ai-consumer@$PROJECT_ID.iam.gserviceaccount.com \
+    --service-account=rag-app-sa@$PROJECT_ID.iam.gserviceaccount.com \
     --allow-unauthenticated \
     --set-secrets="GOOGLE_API_KEY=projects/PROJECT_ID/secrets/AI21_API_KEY/versions/latest 
 ```
@@ -136,7 +136,7 @@ docker push us-east1-docker.pkg.dev/$PROJECT_ID/app/github-assitant:latest
 
 
 ## 🚀 About Me
-Eden Marco, Customer Engineer @ Google Cloud, Tel Aviv🇮🇱
+Eden Marco, LLM Lead @ Google Cloud, Tel Aviv🇮🇱
 
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/eden-marco/) 
 

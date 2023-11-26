@@ -11,10 +11,12 @@ from langchain.vectorstores.faiss import FAISS
 from langchain.vectorstores.pgvector import PGVector
 
 from ai21.contextual_answers import AI21ContextualAnswers
-from queries import query2, query1
+
+# from queries import query2, query1
 from rag.rag import ask_bot_vertex
 
-load_dotenv()
+if not os.environ["PRODUCTION"]:
+    load_dotenv()
 
 # db = FAISS.load_local(folder_path="faiss_index", embeddings = VertexAIEmbeddings())
 db = PGVector.from_existing_index(embedding=VertexAIEmbeddings())
@@ -49,11 +51,10 @@ if __name__ == "__main__":
     # query = "What if I miss a premium payment?"
     # query = "Who can apply for coverage?"
 
-    query = query2
     print(f"***Question***")
-    print(query)
-    # answer = ask_bot_ai21(question_query=query)
-    answer = ask_bot_vertex(question_query=query)
-
-    print("***answer***:")
-    print(answer)
+    # print(query)
+    # # answer = ask_bot_ai21(question_query=query)
+    # answer = ask_bot_vertex(question_query=query)
+    #
+    # print("***answer***:")
+    # print(answer)

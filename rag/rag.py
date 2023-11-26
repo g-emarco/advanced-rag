@@ -1,8 +1,11 @@
 from dotenv import load_dotenv
-load_dotenv()
 import os
 
 from langchain.embeddings import VertexAIEmbeddings
+
+if not os.environ["PRODUCTION"]:
+    load_dotenv()
+
 from langchain.llms.ai21 import AI21
 from langchain.llms.vertexai import VertexAI
 from langchain.prompts import PromptTemplate, ChatPromptTemplate
@@ -12,7 +15,10 @@ from langchain.schema.runnable import RunnablePassthrough
 from langchain.vectorstores.pgvector import PGVector
 from ai21.contextual_answers import AI21ContextualAnswers
 
-db = PGVector.from_existing_index(embedding=VertexAIEmbeddings(), connection_string=os.environ['PGVECTOR_CONNECTION_STRING'])
+db = PGVector.from_existing_index(
+    embedding=VertexAIEmbeddings(),
+    connection_string=os.environ["PGVECTOR_CONNECTION_STRING"],
+)
 retriever = db.as_retriever()
 ai21 = AI21(ai21_api_key=os.environ["AI21_API_KEY"])
 palm2 = VertexAI()
@@ -69,7 +75,6 @@ def ask_bot_vertex_guardrailed(question_query: str) -> str:
 
 
 def ask_bot_vertex_guardrailed2(question_query: str) -> str:
-
     chain = (
         {"context": retriever, "question": RunnablePassthrough()}
         | prompt_guardrailed
@@ -79,8 +84,11 @@ def ask_bot_vertex_guardrailed2(question_query: str) -> str:
     response = chain.invoke(question_query)
 
     from llm_guard.output_scanners import Toxicity
+
     scanner = Toxicity(threshold=0.2)
-    sanitized_output, is_valid, risk_score = scanner.scan(prompt_guardrailed.template, response)
+    sanitized_output, is_valid, risk_score = scanner.scan(
+        prompt_guardrailed.template, response
+    )
 
     if not is_valid:
         return "LLM Guard found the response as toxic"

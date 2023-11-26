@@ -4,12 +4,13 @@ from rag.rag import (
     ask_bot_vertex,
     ask_bot_vertex_guardrailed,
     ask_bot_vertex_guardrailed2,
-    ask_bot_ai21, ask_bot2_ai21
+    ask_bot_ai21,
+    ask_bot2_ai21,
 )
-
-load_dotenv()
 import os
 
+if not os.environ["PRODUCTION"]:
+    load_dotenv()
 
 import streamlit as st
 
@@ -60,6 +61,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 response = ask_bot_vertex_guardrailed(question_query=prompt)
             if model == PALM2_GUARDRAILED2:
                 response = ask_bot_vertex_guardrailed2(question_query=prompt)
+
 
             st.write(response)
             message = {"role": "assistant", "content": response}
