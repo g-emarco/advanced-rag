@@ -3,7 +3,7 @@ import os
 
 from langchain.embeddings import VertexAIEmbeddings
 
-if not os.environ["PRODUCTION"]:
+if not os.environ.get("PRODUCTION"):
     load_dotenv()
 
 from langchain.llms.ai21 import AI21
