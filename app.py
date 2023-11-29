@@ -17,7 +17,7 @@ if not os.environ.get("PRODUCTION"):
 
 import streamlit as st
 
-print("***Lemonade 🍋 Documentation Helper***")
+print("***🍋 Documentation Helper***")
 
 
 st.set_page_config(
@@ -28,7 +28,7 @@ st.set_page_config(
     menu_items=None,
 )
 
-st.title("Lemonade 🍋 Documentation Helper")
+st.title("🍋 Documentation Helper")
 
 AI21 = "AI21 Contextual Answers"
 PALM2 = "PaLM 2"
@@ -102,14 +102,12 @@ with tab1:
     with left_co:
         image = Image.open("static/palm231.webp")
         st.image(image)
-    model = PALM2
 
 with tab2:
     left_co, cent_co, last_co = st.columns(3)
     with left_co:
         image = Image.open("static/palm231.webp")
         st.image(image)
-    model = PALM2_GUARDRAILED
 
 with tab3:
     left_co, cent_co, last_co = st.columns(3)
@@ -120,14 +118,12 @@ with tab3:
         image = Image.open("static/palm231.webp")
 
         st.image(image)
-    model = PALM2_GUARDRAILED2
 
 with tab4:
     left_co, cent_co, last_co = st.columns(3)
     with cent_co:
         image = Image.open("static/ai221.png")
         st.image(image, caption="Contextual Answers")
-    model = AI21
 
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
