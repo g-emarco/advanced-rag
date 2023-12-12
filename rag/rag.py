@@ -21,7 +21,7 @@ db = PGVector.from_existing_index(
 )
 retriever = db.as_retriever()
 ai21 = AI21(ai21_api_key=os.environ["AI21_API_KEY"])
-palm2 = VertexAI()
+palm2 = VertexAI(model_name="text-bison@001")
 ai21_contextual_answers = AI21ContextualAnswers(
     ai21_api_key=os.environ["AI21_API_KEY"], model="answer"
 )
