@@ -17,7 +17,7 @@ from ai21.contextual_answers import AI21ContextualAnswers
 
 db = PGVector.from_existing_index(
     embedding=VertexAIEmbeddings(),
-    connection_string=os.environ["PGVECTOR_CONNECTION_STRING"],
+    connection_string=os.environ["CONNECTION_STRING_MED_REGULAR"],
 )
 retriever = db.as_retriever()
 ai21 = AI21(ai21_api_key=os.environ["AI21_API_KEY"])
@@ -83,17 +83,18 @@ def ask_bot_vertex_guardrailed2(question_query: str) -> str:
     )
     response = chain.invoke(question_query)
 
-    from llm_guard.output_scanners import Toxicity
+    # from llm_guard.output_scanners import Toxicity
 
-    scanner = Toxicity(threshold=0.2)
-    sanitized_output, is_valid, risk_score = scanner.scan(
-        prompt_guardrailed.template, response
-    )
+    # scanner = Toxicity(threshold=0.2)
+    # sanitized_output, is_valid, risk_score = scanner.scan(
+    #     prompt_guardrailed.template, response
+    # )
+    #
+    # if not is_valid:
+    #     return "LLM Guard found the response as toxic"
 
-    if not is_valid:
-        return "LLM Guard found the response as toxic"
-
-    return sanitized_output
+    # return sanitized_output
+    return response
 
 
 def ask_bot_ai21(question_query: str) -> str:

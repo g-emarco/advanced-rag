@@ -18,8 +18,10 @@ langchainhub = "*"
 psycopg2-binary = "*"
 pgvector = "*"
 streamlit = "*"
-llm-guard = "*"
 pg8000 = "*"
+pypdf = "*"
+requests = "*"
+langchain-community = "*"
 
 [dev-packages]
 

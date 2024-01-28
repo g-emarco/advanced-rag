@@ -1,26 +1,28 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  id: Build Image
-  entrypoint: bash
-  args:
-    - -c
-    - |
-      docker build . -t us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest \
-      && docker push us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest 
+#- name: 'gcr.io/cloud-builders/docker'
+#  id: Build Image
+#  entrypoint: bash
+#  args:
+#    - -c
+#    - |
+#      docker build . -t us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest \
+#      && docker push us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   id: Deploy API
   args: ['run', 'deploy', documentation-assistant,
              --image=us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest,
-             '--region=us-east1', '--service-account=rag-app-sa@$PROJECT_ID.iam.gserviceaccount.com',
+             '--region=us-central1', '--service-account=rag-app-sa@$PROJECT_ID.iam.gserviceaccount.com',
               '--allow-unauthenticated',
               '--memory=4Gi',
               '--min-instances=1',
-              '--add-cloudsql-instances=advanced-rag:us-east1:postgres',
+              '--add-cloudsql-instances=advanced-rag:us-central1:medical-db,advanced-rag:us-central1:medical-db-ai-21',
+              '--vpc-connector=projects/advanced-rag/locations/us-central1/connectors/connector2',
+              '--vpc-egress=all-traffic',
               '--set-env-vars=STREAMLIT_SERVER_PORT=8080, PRODUCTION=true',
-              '--set-secrets=AI21_API_KEY=AI21_API_KEY:latest, PGVECTOR_CONNECTION_STRING=PGVECTOR_CONNECTION_STRING:latest, CONNECTION_STRING=CONNECTION_STRING:latest']
-  waitFor: [ 'Build Image' ]
+              '--set-secrets=AI21_API_KEY=AI21_API_KEY:latest, PGVECTOR_CONNECTION_STRING=PGVECTOR_CONNECTION_STRING:latest, CONNECTION_STRING=CONNECTION_STRING:latest, CONNECTION_STRING_MED_REGULAR=CONNECTION_STRING_MED_REGULAR:latest, CONNECTION_STRING_MED_AI21=CONNECTION_STRING_MED_AI21:latest']
+#  waitFor: [ 'Build Image' ]
 
-images:
-- 'us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest'
+#images:
+#- 'us-east1-docker.pkg.dev/$PROJECT_ID/app/documentation-assistant:latest'
